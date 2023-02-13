@@ -6,9 +6,13 @@ $route['applicant'] = 'Apply/index';
 
 // get applicant by vacancy
 $route['applicant/(:any)'] = 'Apply/index/$1';
+$route['applicant/list/(:any)/(:any)'] = 'Apply/index/$1/$2';
 
 // get applicant details
 $route['applicant/id/(:any)'] = 'Apply/applicantDetails/$1';
+
+// testing
+$route['testing'] = 'Apply/testing';
 
 /*
 | -------------------------------------------------------------------------

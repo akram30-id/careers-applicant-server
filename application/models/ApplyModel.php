@@ -24,6 +24,7 @@ class ApplyModel extends CI_Model
 
     //set nama tabel yang akan kita tampilkan datanya
     var $table1 = 'tbl_personal';
+    var $table2 = 'tbl_status';
     var $table5 = 'tbl_referensi';
 
     //set kolom order, kolom pertama saya null untuk kolom edit dan hapus
@@ -34,15 +35,17 @@ class ApplyModel extends CI_Model
     // default order
     var $order = ['id_personal', 'asc'];
 
-    private function _get_datatables_query($idVacancy)
+    private function _get_datatables_query($idVacancy, $status)
     {
         $this->db->from($this->table1);
         $this->db->join($this->table5, 'tbl_personal.id_personal = tbl_referensi.id_personal');
+        $this->db->join($this->table2, 'tbl_personal.id_personal = tbl_status.id_personal');
         $this->db->where('tbl_personal.id_loker', $idVacancy);
+        $this->db->where('tbl_status.status', $status);
         $i = 0;
 
         foreach ($this->column_search as $item) { // loop kolom
-            if ($this->input->get('search')['value']) { // jika datatable mengirim POST untuk search
+            if (isset($this->input->get('search')['value'])) { // jika datatable mengirim POST untuk search
                 if ($i === 0) { // looping pertama
                     $this->db->group_start();
                     $this->db->like($item, $this->input->get('search')['value']);
@@ -66,9 +69,9 @@ class ApplyModel extends CI_Model
         }
     }
 
-    function get_datatables($idVacancy)
+    function get_datatables($idVacancy, $status)
     {
-        $this->_get_datatables_query($idVacancy);
+        $this->_get_datatables_query($idVacancy, $status);
         if ($this->input->get('length') != -1) {
             $this->db->limit($this->input->get('length'), $this->input->get('start'));
         }
@@ -76,9 +79,9 @@ class ApplyModel extends CI_Model
         return $query->result();
     }
 
-    function count_filtered($idVacancy)
+    function count_filtered($idVacancy, $status)
     {
-        $this->_get_datatables_query($idVacancy);
+        $this->_get_datatables_query($idVacancy, $status);
         $query = $this->db->get();
         return $query->num_rows();
     }
@@ -89,17 +92,17 @@ class ApplyModel extends CI_Model
         return $this->db->count_all_results();
     }
 
-    function get_details_applicant ($table, $idApplicant)
+    function get_details_applicant($table, $idApplicant)
     {
         return $this->db->get_where($table, ['id_personal' => $idApplicant]);
     }
 
-    function get_applicant ($table, $id_applicant)
+    function get_applicant($table, $id_applicant)
     {
         return $this->db->get_where($table, ['id_personal' => $id_applicant]);
     }
-    
-    function delete_applicant ($id_applicant)
+
+    function delete_applicant($id_applicant)
     {
         return $this->db->delete('tbl_personal', ['id_personal' => $id_applicant]);
     }

@@ -11,8 +11,35 @@ $route['applicant/list/(:any)/(:any)'] = 'Apply/index/$1/$2';
 // get applicant details
 $route['applicant/id/(:any)'] = 'Apply/applicantDetails/$1';
 
+$route['applicant/get/session'] = 'ApplyApplicant/index';
+
 // testing
 $route['testing'] = 'Apply/testing';
+
+// get latest vacancies
+$route['latest'] = 'Vacancies/latest_vacancies';
+
+// sync latest vacancies
+$route['latest/sync'] = 'Vacancies/synchronize';
+
+// search latest vacancies
+$route['latest/search'] = 'Vacancies/search_vacancy';
+
+// get divisi
+$route['divisi'] = 'Vacancies/list_divisi';
+// get divisi by id
+$route['divisi/id/(:any)'] = 'Vacancies/get_divisi_by_id/$1';
+// sort vacancy by divisi
+$route['divisi/sort/(:any)'] = 'Vacancies/sort_by_divisi/$1';
+
+// get vacancies by divisi
+$route['vacancies/divisi/(:any)/(:any)'] = 'Vacancies/vacancies_per_divisi/$1/$2';
+
+// sort vacancies by divisi
+$route['vacancies/filter/divisi/(:any)'] = 'Vacancies/vacancies_sort_per_divisi/$1';
+
+// get detail vacancy
+$route['detail/id/(:any)'] = 'Vacancies/detail_vacancy/$1';
 
 /*
 | -------------------------------------------------------------------------

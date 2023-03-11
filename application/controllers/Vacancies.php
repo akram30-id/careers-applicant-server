@@ -8,15 +8,27 @@ class Vacancies extends CI_Controller
         parent::__construct();
     }
 
+    function curl_get_contents($url)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
+    }
+
     public function latest_vacancies()
     {
         $request_method = $_SERVER['REQUEST_METHOD'];
         switch ($request_method) {
             case 'GET':
 
-                $content = json_decode(file_get_contents('http://localhost/careers-admin-server/vacancy/latest'));
+                $content = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/vacancy/latest'));
 
-                $divisi = json_decode(file_get_contents('http://localhost/careers-admin-server/divisi'));
+                $divisi = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/divisi'));
 
                 $vacancies = [];
 
@@ -61,7 +73,7 @@ class Vacancies extends CI_Controller
         switch ($request_method) {
             case 'PUT':
 
-                $content = file_get_contents('http://localhost/careers-admin-server/vacancy/synchronize');
+                $content = $this->curl_get_contents('http://localhost/careers-admin-server/vacancy/synchronize');
                 $data = $content;
 
                 break;
@@ -83,7 +95,7 @@ class Vacancies extends CI_Controller
         switch ($request_method) {
             case 'GET':
 
-                $data = json_decode(file_get_contents('http://localhost/careers-admin-server/divisi'));
+                $data = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/divisi'));
 
                 break;
 
@@ -104,7 +116,7 @@ class Vacancies extends CI_Controller
         switch ($request_method) {
             case 'GET':
 
-                $data = json_decode(file_get_contents('http://localhost/careers-admin-server/divisi/id/' . $idDivisi));
+                $data = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/divisi/id/' . $idDivisi));
 
                 break;
 
@@ -124,9 +136,9 @@ class Vacancies extends CI_Controller
         $request_method = $_SERVER['REQUEST_METHOD'];
         switch ($request_method) {
             case 'GET':
-                $content = json_decode(file_get_contents('http://localhost/careers-admin-server/vacancy/s-divisi/' . str_replace('"', "", $idDivisi)));
+                $content = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/vacancy/s-divisi/' . str_replace('"', "", $idDivisi)));
 
-                $divisi = json_decode(file_get_contents('http://localhost/careers-admin-server/divisi'));
+                $divisi = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/divisi'));
 
                 $vacancies = [];
 
@@ -182,12 +194,12 @@ class Vacancies extends CI_Controller
                 $searchValue = str_replace('"', '', $this->input->get('search_value'));
 
                 if ($idDivisi !== NULL || $idDivisi !== "") {
-                    $content = json_decode(file_get_contents('http://localhost/careers-admin-server/vacancy/s/' . $idDivisi . '?search_value=' . str_replace(' ', '%', $searchValue)));
+                    $content = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/vacancy/s/' . $idDivisi . '?search_value=' . str_replace(' ', '%', $searchValue)));
                 } else {
-                    $content = json_decode(file_get_contents('http://localhost/careers-admin-server/vacancy/s?search_value=' . str_replace(' ', '%', $searchValue)));
+                    $content = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/vacancy/s?search_value=' . str_replace(' ', '%', $searchValue)));
                 }
 
-                $divisi = json_decode(file_get_contents('http://localhost/careers-admin-server/divisi'));
+                $divisi = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/divisi'));
 
                 $vacancies = [];
 
@@ -239,7 +251,7 @@ class Vacancies extends CI_Controller
         switch ($request_method) {
             case 'GET':
 
-                $content = json_decode(file_get_contents('http://localhost/careers-admin-server/vacancy/divisi/' . $idDivisi . '/' . $page));
+                $content = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/vacancy/divisi/' . $idDivisi . '/' . $page));
 
                 $vacancies = [];
                 if (isset($content->response->data)) {
@@ -289,7 +301,7 @@ class Vacancies extends CI_Controller
 
                 $level = $this->input->get('level');
 
-                $content = json_decode(file_get_contents('http://localhost/careers-admin-server/vacancy/f/' . str_replace('"', "", $idDivisi) . '?level=' . str_replace('"', '', $level)));
+                $content = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/vacancy/f/' . str_replace('"', "", $idDivisi) . '?level=' . str_replace('"', '', $level)));
 
                 $data = $content;
 
@@ -312,7 +324,7 @@ class Vacancies extends CI_Controller
         switch ($request_method) {
             case 'GET':
 
-                $content = json_decode(file_get_contents('http://localhost/careers-admin-server/vacancy/id/' . str_replace('"', "", $idVacancy)));
+                $content = json_decode($this->curl_get_contents('http://localhost/careers-admin-server/vacancy/id/' . str_replace('"', "", $idVacancy)));
 
                 $data = $content;
 

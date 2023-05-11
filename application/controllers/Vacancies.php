@@ -71,7 +71,7 @@ class Vacancies extends CI_Controller
     {
         $request_method = $_SERVER['REQUEST_METHOD'];
         switch ($request_method) {
-            case 'PUT':
+            case 'GET':
 
                 $content = $this->curl_get_contents('http://localhost/careers-admin-server/vacancy/synchronize');
                 $data = $content;

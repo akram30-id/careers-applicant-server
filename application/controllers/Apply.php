@@ -214,38 +214,6 @@ class Apply extends CI_Controller
 
                 break;
 
-            case 'DELETE':
-
-                $id_personal = $this->input->input_stream('id_personal');
-
-                $cek = $this->ApplyModel->get_applicant('tbl_personal', $id_personal);
-                $sertifkat = $this->ApplyModel->get_applicant('tbl_keahlian', $id_personal);
-
-                if ($cek->num_rows() > 0) {
-                    $deleteQuery = $this->ApplyModel->delete_applicant($id_personal);
-
-                    unlink(FCPATH . 'assets/sertifikat/' . $sertifkat->result()[0]->file_sertifikat);
-
-                    if ($deleteQuery !== FALSE) {
-                        $data['response'] = [
-                            'status' => 200,
-                            'message' => 'Delete Applicant Success'
-                        ];
-                    } else {
-                        $data['response'] = [
-                            'status' => 500,
-                            'message' => 'Internal Server Error'
-                        ];
-                    }
-                } else {
-                    $data['response'] = [
-                        'status' => 404,
-                        'message' => 'No Applicant Found'
-                    ];
-                }
-
-                break;
-
             case 'GET':
 
                 $list = $this->ApplyModel->get_datatables($idVacancy, $statusApplicant);
@@ -284,6 +252,52 @@ class Apply extends CI_Controller
                 ];
                 break;
         }
+        header('Content-Type: application/json');
+        echo json_encode($data);
+    }
+
+    public function applicantDelete($id_personal)
+    {
+        $request_method = $_SERVER['REQUEST_METHOD'];
+        switch ($request_method) {
+            case 'GET':
+
+                $cek = $this->ApplyModel->get_applicant('tbl_personal', $id_personal);
+                $sertifkat = $this->ApplyModel->get_applicant('tbl_keahlian', $id_personal);
+
+                if ($cek->num_rows() > 0) {
+                    $deleteQuery = $this->ApplyModel->delete_applicant($id_personal);
+
+                    unlink(FCPATH . 'assets/sertifikat/' . $sertifkat->result()[0]->file_sertifikat);
+
+                    if ($deleteQuery !== FALSE) {
+                        $data['response'] = [
+                            'status' => 200,
+                            'message' => 'Delete Applicant Success'
+                        ];
+                    } else {
+                        $data['response'] = [
+                            'status' => 500,
+                            'message' => 'Internal Server Error'
+                        ];
+                    }
+                } else {
+                    $data['response'] = [
+                        'status' => 404,
+                        'message' => 'No Applicant Found'
+                    ];
+                }
+
+                break;
+
+            default:
+                $data['response'] = [
+                    'status' => 400,
+                    'message' => 'Bad Request'
+                ];
+                break;
+        }
+
         header('Content-Type: application/json');
         echo json_encode($data);
     }

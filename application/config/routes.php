@@ -4,6 +4,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 // root route of apply controller
 $route['applicant'] = 'Apply/index';
 
+// delete applicant
+$route['applicant/del/id/(:any)'] = 'Apply/applicantDelete/$1';
+
 // get applicant by vacancy
 $route['applicant/(:any)'] = 'Apply/index/$1';
 $route['applicant/list/(:any)/(:any)'] = 'Apply/index/$1/$2';
@@ -40,6 +43,13 @@ $route['vacancies/filter/divisi/(:any)'] = 'Vacancies/vacancies_sort_per_divisi/
 
 // get detail vacancy
 $route['detail/id/(:any)'] = 'Vacancies/detail_vacancy/$1';
+
+
+// Authentication Route
+$route['auth/reg']['POST'] = 'Auth/register';
+$route['auth/in']['POST'] = 'Auth/login';
+$route['auth/sess']['GET'] = 'Auth/getAuthSession';
+$route['auth/out']['POST'] = 'Auth/logout';
 
 /*
 | -------------------------------------------------------------------------
